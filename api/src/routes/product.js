@@ -100,7 +100,7 @@ router.put('/:id', async (req, res) => {
       }
     }
 
-    const product = await Product.findByIdAndUpdate(id, { ...result.value }, { new: true }).populate('category')
+    const product = await Product.findOneAndUpdate({ _id: id }, { ...result.value }, { new: true }).populate('category')
 
     if (!product) {
       throw {

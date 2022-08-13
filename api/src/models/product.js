@@ -33,6 +33,29 @@ productSchema.pre('save', async function (next) {
   return next()
 })
 
+productSchema.post('findOneAndUpdate', async function (result, next) {
+  if (!result) {
+    return next()
+  }
+
+  const category = await Category.findOne({ _id: result.category?._id })
+
+  if (!category) {
+    return next()
+  }
+
+  const hasProduct = category.products.find((product) => product._id === result._id)
+
+  if (hasProduct) {
+    return next()
+  }
+
+  category.products = [result._id, ...category.products]
+  category.save()
+
+  return next()
+})
+
 const Product = mongoose.model('Product', productSchema)
 
 export default Product

@@ -14,7 +14,7 @@ const updateCategorySchema = Joi.object().keys({
 
 router.get('/', async (req, res) => {
   try {
-    const categories = await Category.find({})
+    const categories = await Category.find({}).populate('products')
     return res.status(200).json(categories)
   } catch (error) {
     return res.status(500).json({
@@ -97,7 +97,7 @@ router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id
 
-    const category = await Category.findById(id)
+    const category = await Category.findById(id).populate('products')
 
     if (!category) {
       throw {
@@ -125,7 +125,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const id = req.params.id
 
-    const category = await Category.findByIdAndDelete(id)
+    const category = await Category.findByIdAndRemove(id)
 
     if (!category) {
       throw {

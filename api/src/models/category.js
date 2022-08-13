@@ -8,7 +8,7 @@ const categorySchema = new Schema({
     type: String,
     required: true
   },
-  products: [{ type: Schema.Types.ObjectId, ref: 'product' }]
+  products: [{ type: Schema.Types.ObjectId, ref: 'Product' }]
 })
 
 categorySchema.pre('remove', function (next) {
@@ -16,6 +16,6 @@ categorySchema.pre('remove', function (next) {
   next()
 })
 
-const Category = mongoose.model('category', categorySchema)
+const Category = mongoose.model('Category', categorySchema)
 
 export default Category

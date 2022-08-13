@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { Product } from '../models'
+import { Product, Category } from '../models'
 import Joi from 'joi'
 
 const router = Router()
@@ -100,7 +100,7 @@ router.put('/:id', async (req, res) => {
       }
     }
 
-    const product = await Product.findByIdAndUpdate(id, { ...result.value }, { new: true })
+    const product = await Product.findByIdAndUpdate(id, { ...result.value }, { new: true }).populate('category')
 
     if (!product) {
       throw {

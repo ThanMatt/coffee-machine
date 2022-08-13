@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { Category } from '.'
 
 const { Schema } = mongoose
 
@@ -9,10 +10,29 @@ const productSchema = new Schema({
   },
   category: {
     type: Schema.Types.ObjectId,
-    ref: 'category'
+    ref: 'Category'
   }
 })
 
-const Product = mongoose.model('product', productSchema)
+productSchema.pre('save', async function (next) {
+  const category = await Category.findOne({ _id: this.category })
+  console.log(category)
+
+  if (!category) {
+    return next()
+  }
+
+  const hasProduct = category.products.find((product) => product._id === this._id)
+
+  if (hasProduct) {
+    return next()
+  }
+
+  category.products = [this._id, ...category.products]
+  category.save()
+  return next()
+})
+
+const Product = mongoose.model('Product', productSchema)
 
 export default Product

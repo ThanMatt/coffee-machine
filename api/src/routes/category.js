@@ -1,23 +1,21 @@
 import { Router } from 'express'
-import { Product } from '../models'
+import { Category, Product } from '../models'
 import Joi from 'joi'
 
 const router = Router()
 
 const schema = Joi.object().keys({
-  name: Joi.string().min(2).required(),
-  category: Joi.string().alphanum()
+  name: Joi.string().min(2).required().trim()
 })
 
-const updateProductSchema = Joi.object().keys({
-  name: Joi.string().min(2),
-  category: Joi.string().alphanum()
+const updateCategorySchema = Joi.object().keys({
+  name: Joi.string().min(2).trim()
 })
 
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find({}).populate('category')
-    return res.status(200).json(products)
+    const categories = await Category.find({})
+    return res.status(200).json(categories)
   } catch (error) {
     return res.status(500).json({
       error: 'There was an error'
@@ -38,17 +36,55 @@ router.post('/', async (req, res) => {
       }
     }
 
-    const product = await Product.create({
+    const category = await Category.create({
       ...result.value
     })
 
-    console.log(product)
+    console.log(category)
 
-    return res.status(200).json(product)
+    return res.status(200).json(category)
+  } catch (error) {
+    if (error.details) {
+      return res.status(error.code).json(error)
+    }
+
+    return res.status(500).json({
+      error: 'There was an error'
+    })
+  }
+})
+
+router.put('/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+
+    const result = updateCategorySchema.validate(req.body)
+
+    if (result.error) {
+      throw {
+        code: 400,
+        details: {
+          ...result.error
+        }
+      }
+    }
+
+    const category = await Category.findByIdAndUpdate(id, { ...result.value }, { new: true })
+
+    if (!category) {
+      throw {
+        code: 404,
+        details: {
+          message: 'Category not found'
+        }
+      }
+    }
+
+    return res.status(200).json(category)
   } catch (error) {
     console.error(error)
     if (error.details) {
-      return res.status(400).json(error)
+      return res.status(error.code).json(error)
     }
 
     return res.status(500).json({
@@ -61,57 +97,18 @@ router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id
 
-    const product = await Product.findById(id).populate('category')
+    const category = await Category.findById(id)
 
-    if (!product) {
+    if (!category) {
       throw {
         code: 404,
         details: {
-          message: 'Product not found'
+          message: 'Category not found'
         }
       }
     }
 
-    return res.status(200).json(product)
-  } catch (error) {
-    console.error(error)
-
-    if (error.details) {
-      return res.status(error.code).json(error)
-    }
-    return res.status(500).json({
-      error: 'There was an error'
-    })
-  }
-})
-
-router.put('/:id', async (req, res) => {
-  try {
-    const id = req.params.id
-
-    const result = updateProductSchema.validate(req.body)
-
-    if (result.error) {
-      throw {
-        code: 400,
-        details: {
-          ...result.error
-        }
-      }
-    }
-
-    const product = await Product.findByIdAndUpdate(id, { ...result.value }, { new: true })
-
-    if (!product) {
-      throw {
-        code: 404,
-        details: {
-          message: 'Product not found'
-        }
-      }
-    }
-
-    return res.status(200).json(product)
+    return res.status(200).json(category)
   } catch (error) {
     console.error(error)
     if (error.details) {
@@ -128,21 +125,24 @@ router.delete('/:id', async (req, res) => {
   try {
     const id = req.params.id
 
-    const product = await Product.findByIdAndDelete(id)
+    const category = await Category.findByIdAndDelete(id)
 
-    if (!product) {
+    if (!category) {
       throw {
         code: 404,
         details: {
-          message: 'Product not found'
+          message: 'Category not found'
         }
       }
     }
-    return res.status(200).json(product)
+
+    return res.status(200).json(category)
   } catch (error) {
+    console.error(error)
     if (error.details) {
       return res.status(error.code).json(error)
     }
+
     return res.status(500).json({
       error: 'There was an error'
     })

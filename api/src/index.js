@@ -2,7 +2,7 @@ const express = require('express')
 import cors from 'cors'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
-import { productRoutes } from './routes'
+import { productRoutes, categoryRoutes } from './routes'
 // const inventoryRoutes = require('./src/routes/inventory')
 
 const app = express()
@@ -19,4 +19,5 @@ mongoose.connection.once('open', () => console.log('MongoDB connection: Success!
 const prefix = '/v1'
 
 app.use(`${prefix}/product`, productRoutes)
+app.use(`${prefix}/category`, categoryRoutes)
 app.listen(port, () => console.log(`Listning to port ${port}!`))

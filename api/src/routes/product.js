@@ -6,11 +6,13 @@ const router = Router()
 
 const schema = Joi.object().keys({
   name: Joi.string().min(2).required(),
+  description: Joi.string().min(2),
   category: Joi.string().alphanum()
 })
 
 const updateProductSchema = Joi.object().keys({
   name: Joi.string().min(2),
+  description: Joi.string().min(2),
   category: Joi.string().alphanum()
 })
 

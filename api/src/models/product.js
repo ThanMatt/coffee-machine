@@ -52,12 +52,8 @@ productSchema.post('findOneAndUpdate', async function (result, next) {
   }
 
   const hasProduct = category.products.find((productId) => {
-    console.log('equal: ', result._id, productId, productId.equals(result._id))
     return productId.equals(result._id)
   })
-  console.log('category: ', category)
-  console.log('hasProduct: ', hasProduct)
-  console.log('result: ', result._id)
 
   if (hasProduct) {
     return next()

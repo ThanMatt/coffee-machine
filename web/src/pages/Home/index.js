@@ -35,7 +35,11 @@ const Home = () => {
       ) : (
         <Flex flexDirection="column">
           <Section sectionName="Products" items={products} />
-          <Section sectionName="Categories" items={categories} />
+          <Section
+            sectionName="Categories"
+            type="category"
+            items={categories}
+          />
         </Flex>
       )}
     </Box>

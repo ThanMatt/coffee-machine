@@ -5,22 +5,17 @@ import { useNavigate } from 'react-router-dom';
 
 const Section = ({ sectionName, items }) => {
   const navigate = useNavigate();
+  const type = sectionName === 'Products' ? '/product' : '/category';
 
   return (
     <div>
       <h1>{sectionName}</h1>
       <Flex alignContent="flex-start" flexWrap="wrap">
-        <AddItem onClick={() => navigate('/product/new')} />
+        <AddItem onClick={() => navigate(`/${type}/new`)} />
         {items.map((item) => {
           return (
             <Card
-              onClick={() =>
-                navigate(
-                  `${sectionName === 'Products' ? '/product' : '/category'}/${
-                    item._id
-                  }`
-                )
-              }
+              onClick={() => navigate(`${type}/${item._id}`)}
               key={item._id}
               name={item.name}
               description={item.description}

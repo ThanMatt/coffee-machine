@@ -1,14 +1,20 @@
 import { Routes, Route } from 'react-router-dom';
-import { Home } from './pages';
-import { Flex, Center } from '@chakra-ui/react';
+import { Home, ItemDetails, ProductInfo } from './pages';
+import { Flex, Center, Box } from '@chakra-ui/react';
+import { AddForm } from './components';
 
 function App() {
   return (
     <Flex minHeight="100vh" justifyContent="center">
       <Center>
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
+        <Box width="700px">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/product/new" element={<AddForm />} />
+            <Route path="/product/:id" element={<ItemDetails />} />
+            <Route path="/category/:id" element={<ItemDetails />} />
+          </Routes>
+        </Box>
       </Center>
     </Flex>
   );

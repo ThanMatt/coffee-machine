@@ -2,16 +2,16 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '../../config/axios';
 
-const ProductInfo = () => {
+const CategoryInfo = () => {
   const [loading, setLoading] = useState(false);
-  const [product, setProduct] = useState({});
+  const [category, setProduct] = useState({});
   const params = useParams();
   console.log(params);
   useEffect(() => {
     const getProduct = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/v1/product/${params.id}`);
+        const response = await axios.get(`/v1/category/${params.id}`);
 
         setProduct(response.data);
 
@@ -28,7 +28,7 @@ const ProductInfo = () => {
     <p>Loading</p>
   ) : (
     <div>
-      <p>{product.name}</p>
+      <p>{category.name}</p>
       <p>
         Velit ipsum et minim laboris fugiat deserunt amet dolor reprehenderit.
         Dolor elit nulla aute officia Lorem. Ea incididunt esse eu deserunt
@@ -38,4 +38,4 @@ const ProductInfo = () => {
   );
 };
 
-export default ProductInfo;
+export default CategoryInfo;

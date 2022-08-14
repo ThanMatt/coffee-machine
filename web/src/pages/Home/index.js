@@ -1,34 +1,44 @@
 import { useEffect, useState } from 'react';
+import { Flex, Box } from '@chakra-ui/react';
 import axios from '../../config/axios';
+import { Section } from '../../components';
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+
   useEffect(() => {
     const getProductsAndCategories = async () => {
       setLoading(true);
-      const response = await axios.get('/v1/product');
-      console.log(response);
+      const productUrl = axios.get('/v1/product');
+      const categoryUrl = axios.get('/v1/category');
 
-      setProducts(response.data);
-      setCategories([]);
+      const [productsResponse, categoriesResponse] = await Promise.all([
+        productUrl,
+        categoryUrl
+      ]);
+
+      setProducts(productsResponse.data);
+      setCategories(categoriesResponse.data);
       setLoading(false);
     };
 
     getProductsAndCategories();
   }, []);
+
   return (
-    <div>
+    <Box padding="24px">
       <p>Welcome to coffee machine</p>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        products.map((product, index) => {
-          return <p key={index}>{product.name}</p>;
-        })
+        <Flex flexDirection="column">
+          <Section sectionName="Products" items={products} />
+          <Section sectionName="Categories" items={categories} />
+        </Flex>
       )}
-    </div>
+    </Box>
   );
 };
 

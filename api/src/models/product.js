@@ -11,6 +11,10 @@ const productSchema = new Schema({
   description: {
     type: String
   },
+  type: {
+    type: String,
+    default: 'Product'
+  },
   category: {
     type: Schema.Types.ObjectId,
     ref: 'Category'

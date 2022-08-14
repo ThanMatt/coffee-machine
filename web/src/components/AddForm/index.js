@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  Box,
   Button,
   Flex,
   FormControl,
@@ -25,16 +24,29 @@ const AddForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const item = location.pathname.match(/[a-z]+/)[0];
+  const [item, setItem] = useState({});
+
+  const type = location.pathname.match(/[a-z]+/)[0];
+  const isEdit = !!location.pathname.match(/edit/);
 
   const {
     handleSubmit,
     register,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm({
     resolver: yupResolver(
-      item === 'product' ? productFormValidation : categoryFormValidation
-    )
+      type === 'product' ? productFormValidation : categoryFormValidation
+    ),
+    defaultValues:
+      isEdit &&
+      useMemo(() => {
+        return {
+          name: item.name,
+          description: item.description,
+          category: item.category?._id
+        };
+      }, [item])
   });
 
   const [categories, setCategories] = useState([]);
@@ -49,20 +61,73 @@ const AddForm = () => {
       }
     };
 
-    if (item === 'product') {
+    if (type === 'product') {
       getCategories();
     }
   }, []);
+
+  useEffect(() => {
+    const getItem = async () => {
+      try {
+        const response = await axios.get(
+          `/v1${location.pathname.replace(/\/edit/, '')}`
+        );
+
+        setItem(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (isEdit) {
+      getItem();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (type === 'product') {
+      reset({
+        name: item.name,
+        description: item.description,
+        category: item.category?._id
+      });
+    } else {
+      reset({
+        name: item.name,
+        description: item.description
+      });
+    }
+  }, [item]);
 
   const onSubmit = async (values) => {
     console.log(values);
 
     try {
       setLoading(true);
-      await axios.post(`/v1/${item}`, {
-        ...values
-      });
 
+      console.log(`/v1${location.pathname.replace(/\/edit/, '')}`);
+
+      if (isEdit) {
+        let body;
+        if (type === 'category') {
+          body = {
+            name: values.name,
+            description: values.description
+          };
+        } else {
+          body = {
+            name: values.name,
+            description: values.description,
+            category: values.category
+          };
+        }
+        await axios.put(`/v1${location.pathname.replace(/\/edit/, '')}`, body);
+      } else {
+        await axios.post(`/v1/${type}`, {
+          ...values
+        });
+      }
+      setLoading(false);
       navigate('/');
     } catch (error) {
       console.error(error);
@@ -72,7 +137,7 @@ const AddForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Text>Create a new {item}</Text>
+      <Text>Create a new {type}</Text>
       <Flex flexDirection="column">
         <FormControl isInvalid={errors.name}>
           <FormLabel>Name</FormLabel>
@@ -82,7 +147,7 @@ const AddForm = () => {
           </FormErrorMessage>
         </FormControl>
 
-        {item === 'product' && (
+        {type === 'product' && (
           <FormControl mt="16px" isInvalid={errors.category}>
             <FormLabel>Category</FormLabel>
             <Select
@@ -97,6 +162,9 @@ const AddForm = () => {
                 );
               })}
             </Select>
+            <FormErrorMessage>
+              {errors.category && errors.category.message}
+            </FormErrorMessage>
           </FormControl>
         )}
 

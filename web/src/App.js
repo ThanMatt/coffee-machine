@@ -10,6 +10,8 @@ function App() {
         <Box width="700px">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/category/:id/edit" element={<AddForm />} />
+            <Route path="/product/:id/edit" element={<AddForm />} />
             <Route path="/category/new" element={<AddForm />} />
             <Route path="/product/new" element={<AddForm />} />
             <Route path="/product/:id" element={<ItemDetails />} />

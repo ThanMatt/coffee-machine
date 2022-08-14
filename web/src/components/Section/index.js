@@ -11,7 +11,7 @@ const Section = ({ sectionName, items }) => {
     <div>
       <h1>{sectionName}</h1>
       <Flex alignContent="flex-start" flexWrap="wrap">
-        <AddItem onClick={() => navigate(`/${type}/new`)} />
+        <AddItem onClick={() => navigate(`${type}/new`)} />
         {items.map((item) => {
           return (
             <Card

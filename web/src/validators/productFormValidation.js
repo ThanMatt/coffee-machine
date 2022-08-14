@@ -5,6 +5,7 @@ const productSchema = yup.object({
     .string()
     .min(2, 'Product name must be at least two characters long')
     .required('Product name is required'),
+  category: yup.string().required('Product category is required'),
   description: yup
     .string()
     .min(2, 'Product description must be at least two characters long')

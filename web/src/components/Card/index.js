@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
-const Card = ({ name, description, onClick }) => {
+const Card = ({ name, onClick }) => {
   return (
     <Box
       cursor="pointer"

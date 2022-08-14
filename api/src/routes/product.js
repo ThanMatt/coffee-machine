@@ -7,7 +7,7 @@ const router = Router()
 const schema = Joi.object().keys({
   name: Joi.string().min(2).required(),
   description: Joi.string().min(2),
-  category: Joi.string().alphanum()
+  category: Joi.string()
 })
 
 const updateProductSchema = Joi.object().keys({

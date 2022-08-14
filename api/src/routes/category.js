@@ -5,11 +5,13 @@ import Joi from 'joi'
 const router = Router()
 
 const schema = Joi.object().keys({
-  name: Joi.string().min(2).required().trim()
+  name: Joi.string().min(2).required().trim(),
+  description: Joi.string().min(2).required().trim()
 })
 
 const updateCategorySchema = Joi.object().keys({
-  name: Joi.string().min(2).trim()
+  name: Joi.string().min(2).trim(),
+  description: Joi.string().min(2).trim()
 })
 
 router.get('/', async (req, res) => {

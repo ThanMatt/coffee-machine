@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  Flex,
   FormControl,
   FormLabel,
   Input,
@@ -21,11 +23,11 @@ const AddForm = () => {
     getCategories();
   }, []);
   return (
-    <Box>
+    <Flex>
       <FormControl>
         <FormLabel>Product Name</FormLabel>
         <Input type="email" />
-        <FormLabel>Product Category</FormLabel>
+        <FormLabel mt="16px">Product Category</FormLabel>
         <Select placeholder="Select a product category">
           {categories.map((category) => {
             return (
@@ -35,10 +37,13 @@ const AddForm = () => {
             );
           })}
         </Select>
-        <FormLabel>Product Description</FormLabel>
+        <FormLabel mt="16px">Product Description</FormLabel>
         <Textarea />
+        <Flex mt="16px" justifyContent="flex-end">
+          <Button>Submit</Button>
+        </Flex>
       </FormControl>
-    </Box>
+    </Flex>
   );
 };
 

@@ -105,8 +105,6 @@ const AddForm = () => {
     try {
       setLoading(true);
 
-      console.log(`/v1${location.pathname.replace(/\/edit/, '')}`);
-
       if (isEdit) {
         let body;
         if (type === 'category') {
@@ -128,7 +126,7 @@ const AddForm = () => {
         });
       }
       setLoading(false);
-      navigate('/');
+      navigate(-1);
     } catch (error) {
       console.error(error);
       setLoading(false);

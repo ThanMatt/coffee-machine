@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Flex, Box, Button, Text } from '@chakra-ui/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from '../../config/axios';
-import { Card } from '../../components';
+import { Card, AddItem } from '../../components';
 
 const ItemDetails = () => {
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ const ItemDetails = () => {
       const response = await axios.delete(`/v1${location.pathname}`);
 
       if (response) {
-        navigate('/');
+        navigate(-1);
       }
     } catch (error) {
       console.error(error);
@@ -58,17 +58,17 @@ const ItemDetails = () => {
             <Box>
               <Text>Products: </Text>
               <Flex flexWrap="wrap">
-                {item.products?.length
-                  ? item.products.map((product) => {
-                      return (
-                        <Card
-                          onClick={() => navigate(`/product/${product._id}`)}
-                          key={product._id}
-                          name={product.name}
-                        />
-                      );
-                    })
-                  : 'No products'}
+                <AddItem onClick={() => navigate('/product/new')} />
+                {!!item.products?.length &&
+                  item.products.map((product) => {
+                    return (
+                      <Card
+                        onClick={() => navigate(`/product/${product._id}`)}
+                        key={product._id}
+                        name={product.name}
+                      />
+                    );
+                  })}
               </Flex>
             </Box>
           )}

@@ -34,7 +34,6 @@ const Home = () => {
         <p>Loading...</p>
       ) : (
         <Flex flexDirection="column">
-          <Section sectionName="Products" items={products} />
           <Section
             sectionName="Categories"
             type="category"

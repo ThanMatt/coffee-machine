@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import {
   Button,
   Flex,
@@ -8,11 +8,13 @@ import {
   Input,
   Select,
   Text,
-  Textarea
+  Textarea,
+  useToast
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useDropzone } from 'react-dropzone';
 
 import {
   productFormValidation,
@@ -25,6 +27,16 @@ const AddForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [item, setItem] = useState({});
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState('');
+  const onDrop = useCallback((files) => {
+    setFile(files[0]);
+    setFileName(files[0].name);
+  });
+
+  const toast = useToast();
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const type = location.pathname.match(/[a-z]+/)[0];
   const isEdit = !!location.pathname.match(/edit/);
@@ -100,7 +112,13 @@ const AddForm = () => {
   }, [item]);
 
   const onSubmit = async (values) => {
-    console.log(values);
+    let formData;
+
+    if (file) {
+      formData = new FormData();
+      formData.append('file', file);
+      formData.append('fileName', fileName);
+    }
 
     try {
       setLoading(true);
@@ -121,10 +139,21 @@ const AddForm = () => {
         }
         await axios.put(`/v1${location.pathname.replace(/\/edit/, '')}`, body);
       } else {
-        await axios.post(`/v1/${type}`, {
+        const response = await axios.post(`/v1/${type}`, {
           ...values
         });
+
+        if (formData) {
+          await axios.put(`/v1/product/${response.data._id}/upload`, formData);
+        }
       }
+
+      toast({
+        title: `${type} created.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      });
       setLoading(false);
       navigate(-1);
     } catch (error) {
@@ -162,6 +191,20 @@ const AddForm = () => {
             </Select>
             <FormErrorMessage>
               {errors.category && errors.category.message}
+            </FormErrorMessage>
+          </FormControl>
+        )}
+
+        {type === 'product' && (
+          <FormControl
+            mt="16px"
+            isInvalid={errors.description}
+            {...getRootProps}
+          >
+            <FormLabel>Image</FormLabel>
+            <Input {...register('description')} {...getInputProps()} />
+            <FormErrorMessage>
+              {errors.description && errors.description.message}
             </FormErrorMessage>
           </FormControl>
         )}

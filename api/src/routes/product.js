@@ -1,19 +1,23 @@
 import { Router } from 'express'
 import { Product, Category } from '../models'
 import Joi from 'joi'
+import path from 'path'
+import url from 'url'
 
 const router = Router()
 
 const schema = Joi.object().keys({
   name: Joi.string().min(2).required(),
   description: Joi.string().min(2),
-  category: Joi.string()
+  category: Joi.string(),
+  image: Joi.any()
 })
 
 const updateProductSchema = Joi.object().keys({
   name: Joi.string().min(2),
   description: Joi.string().min(2),
-  category: Joi.string().alphanum()
+  category: Joi.string().alphanum(),
+  image: Joi.any()
 })
 
 router.get('/', async (req, res) => {
@@ -24,6 +28,36 @@ router.get('/', async (req, res) => {
     return res.status(500).json({
       error: 'There was an error'
     })
+  }
+})
+
+router.get('/images/:url(*)', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../../images', req.params.url))
+})
+
+router.put('/:id/upload', async (req, res) => {
+  try {
+    console.log('Req files', req.files)
+    const id = req.params.id
+    if (req.files) {
+      const file = req.files.file
+      const fileName = `${new Date().getTime().toString()}_${req.files.file.name}`
+      const newPath = path.resolve(__dirname, '../../images', fileName)
+
+      file.mv(newPath, async (err) => {
+        if (err) {
+          throw err
+        }
+
+        await Product.findByIdAndUpdate(id, {
+          image: `http://localhost:4000/v1/product/images/${fileName}`
+        })
+        return res.status(200).json({ success: true })
+      })
+    }
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: 'There was an error' })
   }
 })
 
@@ -39,6 +73,9 @@ router.post('/', async (req, res) => {
         }
       }
     }
+
+    const { image } = result.value
+    console.log(image)
 
     const product = await Product.create({
       ...result.value

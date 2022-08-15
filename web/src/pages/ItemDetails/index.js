@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Flex, Box, Button, Text } from '@chakra-ui/react';
+import { Flex, Box, Button, Text, Image } from '@chakra-ui/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from '../../config/axios';
 import { Card, AddItem } from '../../components';
@@ -45,6 +45,15 @@ const ItemDetails = () => {
   ) : (
     <Flex flexDirection="column">
       <Box borderWidth="1px" borderRadius="16px">
+        {item.type === 'Product' && (
+          <Image
+            borderRadius="16px"
+            height="700px"
+            width="700px"
+            objectFit="cover"
+            src={item?.image}
+          />
+        )}
         <Box p="16px">
           <p>{item.name}</p>
           <p>

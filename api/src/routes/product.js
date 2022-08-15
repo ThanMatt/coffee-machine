@@ -35,10 +35,9 @@ router.get('/images/:url(*)', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../../images', req.params.url))
 })
 
-router.put('/:id/upload', async (req, res) => {
+router.put('/upload', async (req, res) => {
   try {
     console.log('Req files', req.files)
-    const id = req.params.id
     if (req.files) {
       const file = req.files.file
       const fileName = `${new Date().getTime().toString()}_${req.files.file.name}`
@@ -49,10 +48,9 @@ router.put('/:id/upload', async (req, res) => {
           throw err
         }
 
-        await Product.findByIdAndUpdate(id, {
-          image: `http://localhost:4000/v1/product/images/${fileName}`
-        })
-        return res.status(200).json({ success: true })
+        const url = `http://localhost:4000/v1/product/images/${fileName}`
+
+        return res.status(200).json({ image: url })
       })
     }
   } catch (error) {

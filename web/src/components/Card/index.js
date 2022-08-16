@@ -1,4 +1,4 @@
-import { Box, Image, Flex } from '@chakra-ui/react';
+import { Box, Image, Flex, Text } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
 const Card = ({ name, onClick, image }) => {
@@ -10,6 +10,7 @@ const Card = ({ name, onClick, image }) => {
       borderRadius="16px"
       margin="6px"
       bgColor="white"
+      width="120px"
       _hover={{
         background: '#f0f0f0'
       }}
@@ -26,14 +27,14 @@ const Card = ({ name, onClick, image }) => {
           />
           <Box p={4}>
             <Box mt="1" maxWidth="100px" noOfLines={1}>
-              {name}
+              <Text textAlign="center">{name}</Text>
             </Box>
           </Box>
         </>
       ) : (
-        <Flex p={4} alignItems="center" height="100px">
+        <Flex p={4} alignItems="center" justifyContent="center" height="100px">
           <Box mt="1" maxWidth="100px" noOfLines={2}>
-            {name}
+            <Text>{name}</Text>
           </Box>
         </Flex>
       )}

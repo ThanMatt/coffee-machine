@@ -51,7 +51,7 @@ const ItemDetails = () => {
         {item.type === 'Product' && item.image && (
           <Image
             borderTopRadius="16px"
-            height="700px"
+            height="400px"
             width="700px"
             objectFit="cover"
             src={item?.image}
@@ -60,7 +60,7 @@ const ItemDetails = () => {
         <Box p="16px">
           <Text fontSize="3xl">{item.name}</Text>
           {item.type === 'Product' && (
-            <Text fontSize="xl">
+            <Text mb="16px" fontSize="xl">
               Category: {item.category?.name || 'Uncategorized'}
             </Text>
           )}

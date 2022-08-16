@@ -9,6 +9,7 @@ const Card = ({ name, onClick, image }) => {
       borderWidth={1}
       borderRadius="16px"
       margin="6px"
+      bgColor="white"
       _hover={{
         background: '#f0f0f0'
       }}

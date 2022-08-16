@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 const AddItem = ({ onClick, label }) => {
   return (
     <Box
+      bgColor="white"
       onClick={onClick}
       cursor="pointer"
       borderWidth={1}

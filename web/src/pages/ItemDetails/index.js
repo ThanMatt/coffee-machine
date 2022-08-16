@@ -47,7 +47,7 @@ const ItemDetails = () => {
       <Flex mb="16px">
         <Button onClick={() => navigate(-1)}>Go Back</Button>
       </Flex>
-      <Box borderWidth="1px" borderRadius="16px">
+      <Box bgColor="white" borderWidth="1px" borderRadius="16px">
         {item.type === 'Product' && item.image && (
           <Image
             borderTopRadius="16px"
@@ -58,17 +58,21 @@ const ItemDetails = () => {
           />
         )}
         <Box p="16px">
-          <p>{item.name}</p>
-          <p>
-            {item.type === 'Product' && (
-              <p>Category: {item.category?.name || 'Uncategorized'}</p>
-            )}
-          </p>
-          <p>{item.description || 'No description available'}</p>
+          <Text fontSize="3xl">{item.name}</Text>
+          {item.type === 'Product' && (
+            <Text fontSize="xl">
+              Category: {item.category?.name || 'Uncategorized'}
+            </Text>
+          )}
+          <Text fontSize="xl">
+            {item.description || 'No description available'}
+          </Text>
 
           {type === 'category' && (
             <Box>
-              <Text>Products: </Text>
+              <Text fontSize="xl" mt="16px" mb="16px">
+                Products:{' '}
+              </Text>
               <Flex flexWrap="wrap">
                 <AddItem
                   label="+ Add Product"

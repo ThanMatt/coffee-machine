@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { Card, AddItem } from '..';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,9 @@ const Section = ({ sectionName, items }) => {
 
   return (
     <div>
-      <h1>{sectionName}</h1>
+      <Text fontSize="xl" mb="16px">
+        {sectionName}
+      </Text>
       <Flex alignContent="flex-start" flexWrap="wrap">
         <AddItem
           label="+ Add category"

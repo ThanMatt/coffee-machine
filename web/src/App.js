@@ -5,7 +5,7 @@ import { AddForm } from './components';
 
 function App() {
   return (
-    <Flex minHeight="100vh" justifyContent="center">
+    <Flex bgColor="#ffdab3" minHeight="100vh" justifyContent="center">
       <Center>
         <Box width="700px">
           <Routes>

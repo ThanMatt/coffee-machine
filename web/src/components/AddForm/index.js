@@ -40,7 +40,7 @@ const AddForm = () => {
 
   const toast = useToast();
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const type = location.pathname.match(/[a-z]+/)[0];
   const isEdit = !!location.pathname.match(/edit/);
@@ -152,7 +152,7 @@ const AddForm = () => {
           };
         }
         if (formData) {
-          const response = await axios.put(`/v1/product/upload`, formData);
+          const response = await axios.put('/v1/product/upload', formData);
           await axios.put(`/v1${location.pathname.replace(/\/edit/, '')}`, {
             ...body,
             image: response.data.image
@@ -163,9 +163,15 @@ const AddForm = () => {
             body
           );
         }
+        toast({
+          title: `${type} updated.`,
+          status: 'success',
+          duration: 3000,
+          isClosable: true
+        });
       } else {
         if (formData) {
-          const response = await axios.put(`/v1/product/upload`, formData);
+          const response = await axios.put('/v1/product/upload', formData);
 
           await axios.post(`/v1/${type}`, {
             ...values,
@@ -176,14 +182,14 @@ const AddForm = () => {
             ...values
           });
         }
+        toast({
+          title: `${type} created.`,
+          status: 'success',
+          duration: 3000,
+          isClosable: true
+        });
       }
 
-      toast({
-        title: `${type} created.`,
-        status: 'success',
-        duration: 3000,
-        isClosable: true
-      });
       setLoading(false);
       navigate(-1);
     } catch (error) {
@@ -194,12 +200,16 @@ const AddForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Button onClick={() => navigate(-1)}>Go Back</Button>
-      <Text>Create a new {type}</Text>
+      <Button mb="16px" onClick={() => navigate(-1)}>
+        Go Back
+      </Button>
+      <Text fontSize="2xl" fontWeight="bold" mb="16px">
+        {isEdit ? `Update a ${type}` : `Create a new ${type}`}
+      </Text>
       <Flex flexDirection="column">
         <FormControl isInvalid={errors.name}>
           <FormLabel>Name</FormLabel>
-          <Input type="text" {...register('name')} />
+          <Input bgColor="white" type="text" {...register('name')} />
           <FormErrorMessage>
             {errors.name && errors.name.message}
           </FormErrorMessage>
@@ -209,6 +219,7 @@ const AddForm = () => {
           <FormControl mt="16px" isInvalid={errors.category}>
             <FormLabel>Category</FormLabel>
             <Select
+              bgColor="white"
               placeholder="Select a product category"
               {...register('category')}
             >
@@ -230,6 +241,7 @@ const AddForm = () => {
           <FormControl mt="16px" isInvalid={errors.description}>
             <Box
               {...getRootProps()}
+              bgColor="white"
               width="300px"
               borderWidth={1}
               borderRadius="6px"
@@ -262,7 +274,7 @@ const AddForm = () => {
 
         <FormControl mt="16px" isInvalid={errors.description}>
           <FormLabel>Description</FormLabel>
-          <Textarea {...register('description')} />
+          <Textarea {...register('description')} bgColor="white" />
           <FormErrorMessage>
             {errors.description && errors.description.message}
           </FormErrorMessage>

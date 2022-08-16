@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Flex, Box } from '@chakra-ui/react';
+import { Flex, Box, Text } from '@chakra-ui/react';
 import axios from '../../config/axios';
 import { Section } from '../../components';
 
@@ -29,7 +29,9 @@ const Home = () => {
 
   return (
     <Box padding="24px">
-      <p>Welcome to coffee machine</p>
+      <Text fontSize="3xl" fontWeight="bold" mb="16px">
+        Welcome to coffee machine
+      </Text>
       {loading ? (
         <p>Loading...</p>
       ) : (

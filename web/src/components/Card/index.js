@@ -31,7 +31,7 @@ const Card = ({ name, onClick, image }) => {
         </>
       ) : (
         <Flex p={4} alignItems="center" height="100px">
-          <Box mt="1" maxWidth="100px" noOfLines={1}>
+          <Box mt="1" maxWidth="100px" noOfLines={2}>
             {name}
           </Box>
         </Flex>

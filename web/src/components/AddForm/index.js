@@ -194,6 +194,7 @@ const AddForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <Button onClick={() => navigate(-1)}>Go Back</Button>
       <Text>Create a new {type}</Text>
       <Flex flexDirection="column">
         <FormControl isInvalid={errors.name}>

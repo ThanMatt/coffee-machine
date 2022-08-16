@@ -44,6 +44,9 @@ const ItemDetails = () => {
     <p>Loading</p>
   ) : (
     <Flex flexDirection="column">
+      <Flex mb="16px">
+        <Button onClick={() => navigate(-1)}>Go Back</Button>
+      </Flex>
       <Box borderWidth="1px" borderRadius="16px">
         {item.type === 'Product' && item.image && (
           <Image

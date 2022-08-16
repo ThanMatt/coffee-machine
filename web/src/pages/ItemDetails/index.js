@@ -45,9 +45,9 @@ const ItemDetails = () => {
   ) : (
     <Flex flexDirection="column">
       <Box borderWidth="1px" borderRadius="16px">
-        {item.type === 'Product' && (
+        {item.type === 'Product' && item.image && (
           <Image
-            borderRadius="16px"
+            borderTopRadius="16px"
             height="700px"
             width="700px"
             objectFit="cover"
@@ -67,7 +67,10 @@ const ItemDetails = () => {
             <Box>
               <Text>Products: </Text>
               <Flex flexWrap="wrap">
-                <AddItem onClick={() => navigate('/product/new')} />
+                <AddItem
+                  label="+ Add Product"
+                  onClick={() => navigate('/product/new')}
+                />
                 {!!item.products?.length &&
                   item.products.map((product) => {
                     return (
@@ -75,6 +78,7 @@ const ItemDetails = () => {
                         onClick={() => navigate(`/product/${product._id}`)}
                         key={product._id}
                         name={product.name}
+                        image={product.image}
                       />
                     );
                   })}

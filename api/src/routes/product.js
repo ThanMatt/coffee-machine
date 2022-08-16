@@ -10,14 +10,14 @@ const schema = Joi.object().keys({
   name: Joi.string().min(2).required(),
   description: Joi.string().min(2),
   category: Joi.string(),
-  image: Joi.any()
+  image: Joi.string()
 })
 
 const updateProductSchema = Joi.object().keys({
   name: Joi.string().min(2),
   description: Joi.string().min(2),
   category: Joi.string().alphanum(),
-  image: Joi.any()
+  image: Joi.string()
 })
 
 router.get('/', async (req, res) => {
@@ -37,7 +37,6 @@ router.get('/images/:url(*)', (req, res) => {
 
 router.put('/upload', async (req, res) => {
   try {
-    console.log('Req files', req.files)
     if (req.files) {
       const file = req.files.file
       const fileName = `${new Date().getTime().toString()}_${req.files.file.name}`

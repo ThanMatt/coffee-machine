@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import {
+  Box,
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Image,
   Input,
   Select,
   Text,
@@ -29,6 +31,8 @@ const AddForm = () => {
   const [item, setItem] = useState({});
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);
+
   const onDrop = useCallback((files) => {
     setFile(files[0]);
     setFileName(files[0].name);
@@ -111,6 +115,16 @@ const AddForm = () => {
     }
   }, [item]);
 
+  useEffect(() => {
+    let objectUrl;
+    if (file) {
+      objectUrl = URL.createObjectURL(file);
+      console.log(objectUrl);
+      setImagePreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [file]);
+
   const onSubmit = async (values) => {
     let formData;
 
@@ -137,14 +151,30 @@ const AddForm = () => {
             category: values.category
           };
         }
-        await axios.put(`/v1${location.pathname.replace(/\/edit/, '')}`, body);
-      } else {
-        const response = await axios.post(`/v1/${type}`, {
-          ...values
-        });
-
         if (formData) {
-          await axios.put(`/v1/product/${response.data._id}/upload`, formData);
+          const response = await axios.put(`/v1/product/upload`, formData);
+          await axios.put(`/v1${location.pathname.replace(/\/edit/, '')}`, {
+            ...body,
+            image: response.data.image
+          });
+        } else {
+          await axios.put(
+            `/v1${location.pathname.replace(/\/edit/, '')}`,
+            body
+          );
+        }
+      } else {
+        if (formData) {
+          const response = await axios.put(`/v1/product/upload`, formData);
+
+          await axios.post(`/v1/${type}`, {
+            ...values,
+            image: response.data.image
+          });
+        } else {
+          await axios.post(`/v1/${type}`, {
+            ...values
+          });
         }
       }
 
@@ -196,13 +226,33 @@ const AddForm = () => {
         )}
 
         {type === 'product' && (
-          <FormControl
-            mt="16px"
-            isInvalid={errors.description}
-            {...getRootProps}
-          >
-            <FormLabel>Image</FormLabel>
-            <Input {...register('description')} {...getInputProps()} />
+          <FormControl mt="16px" isInvalid={errors.description}>
+            <Box
+              {...getRootProps()}
+              width="300px"
+              borderWidth={1}
+              borderRadius="6px"
+            >
+              <Flex
+                flexDirection="column"
+                height="300px"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <input {...getInputProps()} />
+                {!!imagePreview && (
+                  <Image
+                    src={imagePreview}
+                    objectFit="contain"
+                    height="200px"
+                    width="200px"
+                  />
+                )}
+                <Button>
+                  {!!imagePreview ? 'Select again' : 'Select an image'}
+                </Button>
+              </Flex>
+            </Box>
             <FormErrorMessage>
               {errors.description && errors.description.message}
             </FormErrorMessage>
